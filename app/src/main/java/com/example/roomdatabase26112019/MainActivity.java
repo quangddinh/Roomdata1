@@ -1,9 +1,12 @@
 package com.example.roomdatabase26112019;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuAdapter;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
+
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,6 +22,7 @@ import android.widget.Toolbar;
 import com.example.roomdatabase26112019.model.database.Sinhvien;
 import com.example.roomdatabase26112019.viewmodel.Mainviewmodel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,11 +30,22 @@ public class MainActivity extends AppCompatActivity {
     Button mBtnUpdate;
     Mainviewmodel mainviewmodel;
     Toolbar toolbarMain;
+    ArrayList<Sinhvien> mArraylistSinhvien;
+    RecyclerView mRv1;
+    SinhvienAdapter mSvAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mRv1 = findViewById(R.id.rcvSv);
+        mArraylistSinhvien = Sinhvien.mock();
+        mSvAdapter = new SinhvienAdapter(mArraylistSinhvien);
+        mRv1.setAdapter(mSvAdapter);
+
+
         mainviewmodel = new ViewModelProvider(this).get(Mainviewmodel.class);
         getLifecycle().addObserver(mainviewmodel);
         toolbarMain = findViewById(R.id.toolbar_main);
@@ -47,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
         obserData();
         setListener();
-        // tao Btn roi intent sang Update, sau do tao RecycleViwe
 
     }
     private void setListener() {
@@ -70,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         mBtnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
