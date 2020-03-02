@@ -35,10 +35,11 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Sinhvien> mArraylistSinhvien;
     RecyclerView mRv1;
     SinhvienAdapter mSvAdapter;
-    private Mainviewmodel mainViewmodel;
     public static final int VALUE = 1;
     public static final int UPDATE = 1;
     public static final int INSERT = 2;
+    int mRequestCodeImage = 123;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        Intent intent = new Intent(MainActivity.this,MainInsert.class);
+        startActivityForResult(intent,mRequestCodeImage);
     }
 
     @Override
@@ -123,20 +126,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == INSERT && resultCode == RESULT_OK && data != null) {
-            super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == mRequestCodeImage && resultCode == RESULT_OK && data != null) {
             String name = data.getStringExtra(MainInsert.NAME);
             String yearBirth = data.getStringExtra(MainInsert.YEAR);
-
             String diachi = data.getStringExtra(MainInsert.HOME);
 
 
             Sinhvien sinhvien1 = new Sinhvien(name, yearBirth, diachi);
-            mainViewmodel.insertSinhvien(MainActivity.this, sinhvien1);
-//        Toast.makeText(MainActivity.this, "Thêm Thành Công", Toast.LENGTH_SHORT).show();
+            mainviewmodel.insertSinhvien(MainActivity.this, sinhvien1);
+        Toast.makeText(MainActivity.this, "Thêm Thành Công", Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(MainActivity.this,"ko nhan data",Toast.LENGTH_SHORT).show();
         }
+            super.onActivityResult(requestCode, resultCode, data);
     }
 }
