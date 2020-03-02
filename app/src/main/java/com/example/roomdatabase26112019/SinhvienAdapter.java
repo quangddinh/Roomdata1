@@ -39,7 +39,6 @@ public class SinhvienAdapter extends RecyclerView.Adapter<SinhvienAdapter.Sinhvi
         holder.mTvTen.setText(sinhvien.getTen());
         holder.mTvNamsinh.setText(String.valueOf(sinhvien.getNamsinh()));
         holder.mTvDiaChi.setText(sinhvien.getDiachi());
-
     }
 
     @Override

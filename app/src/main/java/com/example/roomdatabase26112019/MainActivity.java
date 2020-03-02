@@ -46,11 +46,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        init();
+        obserData();
+        setListener();
+
+    }
+
+    private void init() {
         mRv1 = findViewById(R.id.rcvSv);
         mArraylistSinhvien = Sinhvien.mock();
         mSvAdapter = new SinhvienAdapter(mArraylistSinhvien);
         mRv1.setAdapter(mSvAdapter);
-
+        mBtnUpdate = findViewById(R.id.btn_update);
 
         mainviewmodel = new ViewModelProvider(this).get(Mainviewmodel.class);
         getLifecycle().addObserver(mainviewmodel);
@@ -59,17 +67,10 @@ public class MainActivity extends AppCompatActivity {
         getActionBar().setTitle("");
         getActionBar().setDisplayShowHomeEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
         toolbarMain.setBackgroundColor(Color.BLUE);
-
         toolbarMain.inflateMenu(R.menu.menu_main);
-
-        mBtnUpdate = findViewById(R.id.btn_update);
-
-        obserData();
-        setListener();
-
     }
+
     private void setListener() {
 //        mainviewmodel.getAllSinhvien(this);
 //        mainviewmodel.insertSinhvien(this, new Sinhvien[]{new Sinhvien("Nguyễn Văn A", 1990, "Quận 1")});
@@ -84,23 +85,22 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.item_insert){
                     Intent intent = new Intent(MainActivity.this,MainInsert.class);
-                    startActivityForResult(intent, INSERT);
+                    startActivityForResult(intent, mRequestCodeImage);
                     // chuyen sang man hinh insert
                 }
                 return false;
             }
         });
-
         mBtnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//              chuyen man hinh qua update
+              //chuyen man hinh qua update
                 Intent intent = new Intent(MainActivity.this,MainUpdate.class);
                 startActivity(intent);
             }
         });
-        Intent intent = new Intent(MainActivity.this,MainInsert.class);
-        startActivityForResult(intent,mRequestCodeImage);
+//        Intent intent = new Intent(MainActivity.this,MainInsert.class);
+//        startActivityForResult(intent,mRequestCodeImage);
     }
 
     @Override
@@ -131,9 +131,9 @@ public class MainActivity extends AppCompatActivity {
             String yearBirth = data.getStringExtra(MainInsert.YEAR);
             String diachi = data.getStringExtra(MainInsert.HOME);
 
-
             Sinhvien sinhvien1 = new Sinhvien(name, yearBirth, diachi);
             mainviewmodel.insertSinhvien(MainActivity.this, sinhvien1);
+
         Toast.makeText(MainActivity.this, "Thêm Thành Công", Toast.LENGTH_SHORT).show();
         }
         else {
