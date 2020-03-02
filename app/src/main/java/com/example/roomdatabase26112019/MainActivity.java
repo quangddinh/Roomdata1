@@ -1,5 +1,6 @@
 package com.example.roomdatabase26112019;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuAdapter;
 import androidx.lifecycle.Observer;
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,7 +35,10 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Sinhvien> mArraylistSinhvien;
     RecyclerView mRv1;
     SinhvienAdapter mSvAdapter;
-
+    private Mainviewmodel mainViewmodel;
+    public static final int VALUE = 1;
+    public static final int UPDATE = 1;
+    public static final int INSERT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.item_insert){
                     Intent intent = new Intent(MainActivity.this,MainInsert.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, INSERT);
                     // chuyen sang man hinh insert
                 }
                 return false;
@@ -88,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         mBtnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//              chuyen man hinh qua update
                 Intent intent = new Intent(MainActivity.this,MainUpdate.class);
                 startActivity(intent);
             }
@@ -113,5 +119,24 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("BBB",longs.toString());
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == INSERT && resultCode == RESULT_OK && data != null) {
+            super.onActivityResult(requestCode, resultCode, data);
+            String name = data.getStringExtra(MainInsert.NAME);
+            String yearBirth = data.getStringExtra(MainInsert.YEAR);
+
+            String diachi = data.getStringExtra(MainInsert.HOME);
+
+
+            Sinhvien sinhvien1 = new Sinhvien(name, yearBirth, diachi);
+            mainViewmodel.insertSinhvien(MainActivity.this, sinhvien1);
+//        Toast.makeText(MainActivity.this, "Thêm Thành Công", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(MainActivity.this,"ko nhan data",Toast.LENGTH_SHORT).show();
+        }
     }
 }

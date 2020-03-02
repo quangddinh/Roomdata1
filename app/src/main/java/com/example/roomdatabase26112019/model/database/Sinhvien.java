@@ -1,5 +1,7 @@
 package com.example.roomdatabase26112019.model.database;
 
+import android.content.Intent;
+
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -15,15 +17,14 @@ public class Sinhvien {
     private Integer id;
 
     private String ten;
-    private Integer namsinh;
+    private String namsinh;
     private String diachi;
 
     public Sinhvien() {
-
     }
 
     @Ignore
-    public Sinhvien(String ten, Integer namsinh, String diachi) {
+    public Sinhvien(String ten, String namsinh, String diachi) {
         this.ten = ten;
         this.namsinh = namsinh;
         this.diachi = diachi;
@@ -45,11 +46,11 @@ public class Sinhvien {
         this.ten = ten;
     }
 
-    public Integer getNamsinh() {
+    public String getNamsinh() {
         return namsinh;
     }
 
-    public void setNamsinh(Integer namsinh) {
+    public void setNamsinh(String namsinh) {
         this.namsinh = namsinh;
     }
 
@@ -63,10 +64,10 @@ public class Sinhvien {
 
     public static ArrayList<Sinhvien> mock(){
         ArrayList<Sinhvien> mArraylistMenu = new ArrayList<>();
-        mArraylistMenu.add(new Sinhvien("Pizza",1997,"123 Luy Ban Bich"));
-        mArraylistMenu.add(new Sinhvien("Nguyen Van A",1996,"100 Phan Van Hon"));
-        mArraylistMenu.add(new Sinhvien("Nguyen Van B",2000,"500 Truong Chinh"));
-        mArraylistMenu.add(new Sinhvien("Nguyen Van C",2000,"396 Au Co"));
+        mArraylistMenu.add(new Sinhvien("Pizza","1997","123 Luy Ban Bich"));
+        mArraylistMenu.add(new Sinhvien("Nguyen Van A","1996","100 Phan Van Hon"));
+        mArraylistMenu.add(new Sinhvien("Nguyen Van B","2000","500 Truong Chinh"));
+        mArraylistMenu.add(new Sinhvien("Nguyen Van C","2000","396 Au Co"));
         return mArraylistMenu;
     }
 

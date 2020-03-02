@@ -16,11 +16,52 @@ public class MainInsert extends AppCompatActivity {
     Button mBtnInsert;
     EditText mEdtTen,mEdtNamsinh,mEdtDiachi;
 
+    public static final String NAME = "NAME";
+    public static final String YEAR = "YEAR";
+    public static final String HOME = "HOME";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_insert);
 
+        init();
+        backclick();
+        insertclick();
+    }
+
+    private void insertclick() {
+        mBtnInsert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = mEdtTen.getText().toString();
+                String diachi = mEdtDiachi.getText().toString();
+                String value1 = mEdtNamsinh.getText().toString();
+
+
+                Intent intent = new Intent();
+                intent.putExtra(NAME, name);
+                intent.putExtra(YEAR, value1);
+                intent.putExtra(HOME, diachi);
+                setResult(RESULT_OK, intent);
+                finish();
+//                startActivity(intent);
+            }
+        });
+    }
+
+    private void backclick() {
+        toolbarMainInsert.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainInsert.this,"Nut Back",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainInsert.this,MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void init(){
         mBtnInsert = findViewById(R.id.btn_insert);
         mEdtTen = findViewById(R.id.edt_name);
         mEdtDiachi = findViewById(R.id.edt_address);
@@ -34,34 +75,5 @@ public class MainInsert extends AppCompatActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         toolbarMainInsert.setBackgroundColor(Color.BLUE);
-
-        toolbarMainInsert.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainInsert.this,"Nut Back",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainInsert.this,MainActivity.class);
-                startActivity(intent);
-
-            }
-        });
-
-
-        mBtnInsert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainInsert.this,MainActivity.class);
-                String name = mEdtTen.getText().toString();
-                String diachi = mEdtDiachi.getText().toString();
-//                Integer year  = mEdtNamsinh.
-                Intent data = new Intent();
-                data.putExtra(Intent.EXTRA_TITLE,name);
-                data.putExtra(Intent.EXTRA_TITLE,diachi);
-                setResult(RESULT_OK,data);
-                finish();
-                startActivity(intent);
-
-            }
-        });
-
     }
 }

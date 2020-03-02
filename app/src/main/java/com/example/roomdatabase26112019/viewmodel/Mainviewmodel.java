@@ -61,6 +61,7 @@ public class Mainviewmodel extends ViewModel implements LifecycleObserver {
         return mutableLiveDataAraySinhvien;
     }
 
+
     public void insertSinhvien(final Context context, final Sinhvien... sinhviens) {
         Observable<List<Long>> observable = Observable.fromCallable(new Callable<List<Long>>() {
             @Override

@@ -8,11 +8,11 @@ import androidx.room.RoomDatabase;
 
 @Database(entities = {Sinhvien.class}, version = 1, exportSchema = false)
 public abstract class SinhvienDatabase extends RoomDatabase {
-    private static SinhvienDatabase sinhvienDatabase = null;
 
+    private static SinhvienDatabase sinhvienDatabase = null;
     public abstract SinhvienDao sinhvienDao();
 
-    public static SinhvienDatabase getInstance(Context context) {
+    public static synchronized SinhvienDatabase getInstance(Context context) {
         if (sinhvienDatabase == null) {
             sinhvienDatabase = Room.databaseBuilder(
                     context,

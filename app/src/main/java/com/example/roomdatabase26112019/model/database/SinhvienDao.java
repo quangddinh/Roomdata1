@@ -10,6 +10,9 @@ import io.reactivex.Observable;
 @Dao
 public interface SinhvienDao {
 
+    @Insert
+    void insertSinhvien(Sinhvien sinhvien);
+
     @Query("SELECT * FROM sinhvien")
     Observable<List<Sinhvien>> getAll();
 
