@@ -1,40 +1,59 @@
 package com.example.roomdatabase26112019.repository;
 
-import android.content.Context;
+import android.app.Application;
 import android.os.AsyncTask;
-
+import androidx.lifecycle.LiveData;
 import com.example.roomdatabase26112019.model.database.Sinhvien;
 import com.example.roomdatabase26112019.model.database.SinhvienDao;
 import com.example.roomdatabase26112019.model.database.SinhvienDatabase;
-
 import java.util.List;
 
-import io.reactivex.Observable;
 
 
 public class RoomRepository {
+
     private SinhvienDao sinhvienDao;
-    private static RoomRepository roomRepository = null;
+    private LiveData<List<Sinhvien>> allSinhVien;
 
-    private RoomRepository(Context context){
-        SinhvienDatabase sinhvienDatabase = SinhvienDatabase.getInstance(context);
+    public RoomRepository(Application application) {
+        SinhvienDatabase sinhvienDatabase = SinhvienDatabase.getInstance(application);
         sinhvienDao = sinhvienDatabase.sinhvienDao();
+        allSinhVien = sinhvienDao.getAllSinhVien();
     }
 
-    public static RoomRepository getInstance(Context context){
-        if (roomRepository == null){
-            roomRepository = new RoomRepository(context);
+    public void insert(Sinhvien sinhvien) {
+        new InsertSinhVienAsyncTask(sinhvienDao).execute(sinhvien);
+    }
+    public void deleteAllSinhVien (){
+        new DeleteAllSinhVienAsyncTask(sinhvienDao).execute();
+    }
+    public LiveData<List<Sinhvien>> getAllSinhVien() {
+        return allSinhVien;
+    }
+
+    private static class InsertSinhVienAsyncTask extends AsyncTask<Sinhvien, Void, Void> {
+        private SinhvienDao sinhvienDao;
+
+        private InsertSinhVienAsyncTask(SinhvienDao sinhvienDao) {
+            this.sinhvienDao = sinhvienDao;
         }
-        return roomRepository;
+        @Override
+        protected Void doInBackground(Sinhvien... sinhviens) {
+            sinhvienDao.insert(sinhviens[0]);
+            return null;
+        }
     }
 
-    public Observable<List<Sinhvien>> getAllSinhvien(){
-        return sinhvienDao.getAll();
+    private static class DeleteAllSinhVienAsyncTask extends AsyncTask<Void, Void, Void> {
+        private SinhvienDao sinhvienDao;
+
+        private DeleteAllSinhVienAsyncTask(SinhvienDao sinhvienDao) {
+            this.sinhvienDao = sinhvienDao;
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            sinhvienDao.deleteAllSinhvien();
+            return null;
+        }
     }
-    public List<Long> insertSinhvien(Sinhvien... sinhviens){
-        return sinhvienDao.insertSinhvien(sinhviens);
-    }
-
-
-
 }

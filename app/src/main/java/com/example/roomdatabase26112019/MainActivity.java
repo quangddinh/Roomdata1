@@ -6,6 +6,7 @@ import androidx.appcompat.view.menu.MenuAdapter;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -18,27 +19,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.example.roomdatabase26112019.model.database.Sinhvien;
 import com.example.roomdatabase26112019.viewmodel.Mainviewmodel;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button mBtnUpdate;
+    Button mEdit;
+    RecyclerView recycle;
     Mainviewmodel mainviewmodel;
     Toolbar toolbarMain;
-    ArrayList<Sinhvien> mArraylistSinhvien;
     RecyclerView mRv1;
     SinhvienAdapter mSvAdapter;
-    public static final int VALUE = 1;
-    public static final int UPDATE = 1;
-    public static final int INSERT = 2;
     int mRequestCodeImage = 123;
+    TextView mTvName, mTvYear, mTvAddress,mTvShow;
 
 
     @Override
@@ -48,59 +50,71 @@ public class MainActivity extends AppCompatActivity {
 
 
         init();
-        obserData();
         setListener();
-
     }
 
     private void init() {
+        mSvAdapter = new SinhvienAdapter();
         mRv1 = findViewById(R.id.rcvSv);
-        mArraylistSinhvien = Sinhvien.mock();
-        mSvAdapter = new SinhvienAdapter(mArraylistSinhvien);
         mRv1.setAdapter(mSvAdapter);
-        mBtnUpdate = findViewById(R.id.btn_update);
 
-        mainviewmodel = new ViewModelProvider(this).get(Mainviewmodel.class);
-        getLifecycle().addObserver(mainviewmodel);
+        mEdit = findViewById(R.id.btn_edit);
+        mTvName = findViewById(R.id.tv_name);
+        mTvAddress = findViewById(R.id.tv_address);
+        mTvYear = findViewById(R.id.tv_year);
+        mTvShow = findViewById(R.id.tv_show);
+        recycle = findViewById(R.id.rcvSv);
+
+        mRv1.setLayoutManager(new LinearLayoutManager(this));
+        mRv1.setHasFixedSize(true);
+
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+        recycle.setLayoutManager(mLayoutManager);
+
+        mainviewmodel = ViewModelProviders.of(this).get(Mainviewmodel.class);
+        mainviewmodel.getAllSinhVien().observe(this, new Observer<List<Sinhvien>>() {
+            @Override
+            public void onChanged(List<Sinhvien> sinhviens) {
+                mSvAdapter.setSinhviens(sinhviens);
+            }
+        });
+
         toolbarMain = findViewById(R.id.toolbar_main);
         setActionBar(toolbarMain);
-        getActionBar().setTitle("");
+        getActionBar().setTitle("Quan ly sinh vien");
         getActionBar().setDisplayShowHomeEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbarMain.setBackgroundColor(Color.BLUE);
+        toolbarMain.setBackgroundColor(Color.LTGRAY);
         toolbarMain.inflateMenu(R.menu.menu_main);
     }
 
     private void setListener() {
-//        mainviewmodel.getAllSinhvien(this);
-//        mainviewmodel.insertSinhvien(this, new Sinhvien[]{new Sinhvien("Nguyễn Văn A", 1990, "Quận 1")});
-        toolbarMain.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Nut back", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        toolbarMain.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(MainActivity.this, "Nut back", Toast.LENGTH_SHORT).show();
+//            }
+//        });
         toolbarMain.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.item_insert){
                     Intent intent = new Intent(MainActivity.this,MainInsert.class);
                     startActivityForResult(intent, mRequestCodeImage);
-                    // chuyen sang man hinh insert
+                    mTvShow.setVisibility(View.GONE);
+                } else
+                    if (menuItem.getItemId() == R.id.item_deleteAllSinhVien){
+                        mainviewmodel.deleteAll();
+                        Toast.makeText(MainActivity.this, "Clear data success"
+                                , Toast.LENGTH_SHORT).show();
+                        mTvShow.setVisibility(View.VISIBLE);
                 }
                 return false;
             }
+
         });
-        mBtnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              //chuyen man hinh qua update
-                Intent intent = new Intent(MainActivity.this,MainUpdate.class);
-                startActivity(intent);
-            }
-        });
-//        Intent intent = new Intent(MainActivity.this,MainInsert.class);
-//        startActivityForResult(intent,mRequestCodeImage);
     }
 
     @Override
@@ -109,35 +123,20 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void obserData() {
-        mainviewmodel.getAllSinhvienSuccess().observe(this, new Observer<List<Sinhvien>>() {
-            @Override
-            public void onChanged(List<Sinhvien> sinhviens) {
-                Log.d("BBB",sinhviens.toString());
-            }
-        });
-        mainviewmodel.getIdAfterInsertSuccess().observe(this, new Observer<List<Long>>() {
-            @Override
-            public void onChanged(List<Long> longs) {
-                Log.d("BBB",longs.toString());
-            }
-        });
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == mRequestCodeImage && resultCode == RESULT_OK && data != null) {
+
             String name = data.getStringExtra(MainInsert.NAME);
             String yearBirth = data.getStringExtra(MainInsert.YEAR);
             String diachi = data.getStringExtra(MainInsert.HOME);
-
             Sinhvien sinhvien1 = new Sinhvien(name, yearBirth, diachi);
-            mainviewmodel.insertSinhvien(MainActivity.this, sinhvien1);
+            mainviewmodel.insert(sinhvien1);
 
-        Toast.makeText(MainActivity.this, "Thêm Thành Công", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Insert success", Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(MainActivity.this,"ko nhan data",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this,"No data",Toast.LENGTH_SHORT).show();
         }
             super.onActivityResult(requestCode, resultCode, data);
     }

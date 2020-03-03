@@ -8,12 +8,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
 public class MainInsert extends AppCompatActivity {
     Toolbar toolbarMainInsert;
-    Button mBtnInsert;
+    Button mBtnInsert,mBtnDelete;
     EditText mEdtTen,mEdtNamsinh,mEdtDiachi;
 
     public static final String NAME = "NAME";
@@ -28,24 +29,41 @@ public class MainInsert extends AppCompatActivity {
         init();
         backclick();
         insertclick();
+        deleteclick();
+    }
+
+    private void deleteclick() {
+        mBtnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEdtTen.setText("");
+                mEdtDiachi.setText("");
+                mEdtNamsinh.setText("");
+            }
+        });
     }
 
     private void insertclick() {
         mBtnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String name = mEdtTen.getText().toString();
                 String diachi = mEdtDiachi.getText().toString();
-                String value1 = mEdtNamsinh.getText().toString();
-
-
-                Intent intent = new Intent();
-                intent.putExtra(NAME, name);
-                intent.putExtra(YEAR, value1);
-                intent.putExtra(HOME, diachi);
-                setResult(RESULT_OK, intent);
-                finish();
-//                startActivity(intent);
+                String namsinh = mEdtNamsinh.getText().toString();
+                if(name.equals("") || diachi.equals("") || namsinh.equals("") )
+                {
+                    Toast.makeText(MainInsert.this , "Bạn Chưa Nhập Thông Tin", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    Intent intent = new Intent();
+                    intent.putExtra(NAME, name);
+                    intent.putExtra(YEAR, namsinh);
+                    intent.putExtra(HOME, diachi);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
         });
     }
@@ -54,7 +72,7 @@ public class MainInsert extends AppCompatActivity {
         toolbarMainInsert.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainInsert.this,"Nut Back",Toast.LENGTH_SHORT).show();
+
                 Intent intent = new Intent(MainInsert.this,MainActivity.class);
                 startActivity(intent);
             }
@@ -66,7 +84,7 @@ public class MainInsert extends AppCompatActivity {
         mEdtTen = findViewById(R.id.edt_name);
         mEdtDiachi = findViewById(R.id.edt_address);
         mEdtNamsinh = findViewById(R.id.edt_year);
-
+        mBtnDelete = findViewById(R.id.btn_delete);
 
         toolbarMainInsert = findViewById(R.id.toolbar_insert);
         setActionBar(toolbarMainInsert);

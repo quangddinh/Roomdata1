@@ -61,14 +61,4 @@ public class Sinhvien {
     public void setDiachi(String diachi) {
         this.diachi = diachi;
     }
-
-    public static ArrayList<Sinhvien> mock(){
-        ArrayList<Sinhvien> mArraylistMenu = new ArrayList<>();
-        mArraylistMenu.add(new Sinhvien("Pizza","1997","123 Luy Ban Bich"));
-        mArraylistMenu.add(new Sinhvien("Nguyen Van A","1996","100 Phan Van Hon"));
-        mArraylistMenu.add(new Sinhvien("Nguyen Van B","2000","500 Truong Chinh"));
-        mArraylistMenu.add(new Sinhvien("Nguyen Van C","2000","396 Au Co"));
-        return mArraylistMenu;
-    }
-
 }

@@ -1,11 +1,13 @@
 package com.example.roomdatabase26112019;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -14,14 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.roomdatabase26112019.model.database.Sinhvien;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SinhvienAdapter extends RecyclerView.Adapter<SinhvienAdapter.SinhvienViewHolder> {
 
-    private ArrayList<Sinhvien> mArraySv;
-
-    public  SinhvienAdapter(ArrayList<Sinhvien> mArraySv) {
-        this.mArraySv = mArraySv;
-    }
+    private List<Sinhvien> sinhviens = new ArrayList<>();
 
     @NonNull
     @Override
@@ -35,19 +34,24 @@ public class SinhvienAdapter extends RecyclerView.Adapter<SinhvienAdapter.Sinhvi
 
     @Override
     public void onBindViewHolder(@NonNull SinhvienViewHolder holder, int position) {
-        Sinhvien sinhvien = mArraySv.get(position);
+        Sinhvien sinhvien = sinhviens.get(position);
         holder.mTvTen.setText(sinhvien.getTen());
-        holder.mTvNamsinh.setText(String.valueOf(sinhvien.getNamsinh()));
+        holder.mTvNamsinh.setText(sinhvien.getNamsinh());
         holder.mTvDiaChi.setText(sinhvien.getDiachi());
     }
 
     @Override
     public int getItemCount() {
-        return mArraySv!= null ? mArraySv.size() : 0;
+        return sinhviens!= null ? sinhviens.size() : 0;
     }
-
+    public void setSinhviens(List<Sinhvien> sinhviens)
+    {
+        this.sinhviens = sinhviens;
+        notifyDataSetChanged();
+    }
     class SinhvienViewHolder extends RecyclerView.ViewHolder {
         TextView mTvTen, mTvNamsinh, mTvDiaChi;
+        Button mBtnEdit;
 
         public SinhvienViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -55,7 +59,9 @@ public class SinhvienAdapter extends RecyclerView.Adapter<SinhvienAdapter.Sinhvi
             mTvTen = itemView.findViewById(R.id.tv_name);
             mTvNamsinh = itemView.findViewById(R.id.tv_year);
             mTvDiaChi = itemView.findViewById(R.id.tv_address);
+            mBtnEdit = itemView.findViewById(R.id.btn_edit);
 
         }
     }
+
 }
